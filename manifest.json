@@ -6,7 +6,7 @@
   "permissions": [],
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/*"], // まずはYouTube限定で発火
+      "matches": ["https://www.youtube.com/*"], // まずはYouTube限定で発火 
       "js": ["content.js"]
     }
   ]
