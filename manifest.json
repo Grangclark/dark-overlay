@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Dark Overlay (Cinema Mode)",
+  "version": "1.0",
+  "description": "動画周辺の背景を暗くして、シアターのような没入感を演出します",
+  "permissions": [],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"], // まずはYouTube限定で発火
+      "js": ["content.js"]
+    }
+  ]
+}
