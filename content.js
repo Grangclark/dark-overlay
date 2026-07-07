@@ -1,4 +1,4 @@
-// content.js
+// content.js (完全版・最終形態)
 
 console.log("🎬 Dark Overlay: 拡張機能が正常に注入されました！");
 
@@ -9,31 +9,52 @@ overlay.style.top = "0";
 overlay.style.left = "0";
 overlay.style.width = "100vw";
 overlay.style.height = "100vh";
-overlay.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
-overlay.style.zIndex = "99999";
+overlay.style.backgroundColor = "rgba(0, 0, 0, 0.85)"; // ★没入感を高めるために少し暗め（0.85）にアップ！
+overlay.style.zIndex = "99999";                        // カーテンの重ね順
 overlay.style.pointerEvents = "none";
+overlay.style.display = "none"; // 初期は非表示
 
-// ★【今日の一撃：初期状態】最初はカーテンを非表示（none）にしておきます
-overlay.style.display = "none";
-
-// 2. 画面にドッキング
 document.body.appendChild(overlay);
 
-// ★【今日の一撃：スイッチ】キーボードの「C」が押されたら切り替える
+// 2. キーボードの「C」が押されたら切り替える
 document.addEventListener("keydown", (event) => {
-  // ユーザーが検索ボックスなどに「文字入力」している最中は、スイッチが暴発しないようにスルーする
+  // 文字入力中は暴発ガード
   if (event.target.tagName === "INPUT" || event.target.tagName === "TEXTAREA" || event.target.isContentEditable) {
     return;
   }
 
-  // キーボードの「c」または「C」が押された場合
   if (event.key.toLowerCase() === "c") {
+    // 👑【真のターゲット】巨大な箱ではなく、動画プレイヤーを直接包んでいる直近の2つの枠だけを狙い撃ち
+    const playerStage = document.getElementById("player-container-outer"); // 通常モード時の外枠
+    const moviePlayer = document.getElementById("movie_player");           // プレイヤー本体
+
     if (overlay.style.display === "none") {
-      overlay.style.display = "block"; // カーテンを引く（暗くする）
-      console.log("🎬 Dark Overlay: カーテンを引きました [ON]");
+      // 【ONの処理】カーテンを引く
+      overlay.style.display = "block";
+
+      // 動画プレイヤーのエリアだけをピンポイントで最前面に引き上げる
+      if (playerStage) {
+        playerStage.style.position = "relative";
+        playerStage.style.zIndex = "100000";
+      }
+      if (moviePlayer) {
+        moviePlayer.style.position = "relative";
+        moviePlayer.style.zIndex = "100001";
+      }
+      console.log("🎬 Dark Overlay: シネマモード [ON]");
     } else {
-      overlay.style.display = "none";  // カーテンを開ける（元に戻す）
-      console.log("🎬 Dark Overlay: カーテンを開けました [OFF]");
+      // 【OFFの処理】カーテンを開ける
+      overlay.style.display = "none";
+
+      // スタイルを綺麗にリセット
+      if (playerStage) {
+        playerStage.style.zIndex = "";
+        playerStage.style.position = "";
+      }
+      if (moviePlayer) {
+        moviePlayer.style.zIndex = "";
+      }
+      console.log("🎬 Dark Overlay: シネマモード [OFF]");
     }
   }
 });
